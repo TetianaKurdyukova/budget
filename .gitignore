@@ -1,0 +1,7 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+/back/node_modules/
+/back/nbproject/
+
+/front/node_modules/
+/front/nbproject/
