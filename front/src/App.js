@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {Provider, connect}   from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import {createStore, combineReducers, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import './App.css';
 import { GraphQLClient } from 'graphql-request';
+import reducers from './reducers/'
 
 const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
 const transactionsAll = (`query transactions{
@@ -15,20 +15,6 @@ const transactionsAll = (`query transactions{
           summ
         }
       }`);
-
-let rootReducer = (state, action) => {
-    if (state === undefined){
-        return {status: null, payload: [], error: null};
-    }
-    if (action.type === 'SET_STATUS'){
-        return {status: action.status, payload: action.payload, error: action.error};
-    }
-    return state;
-};
-
-const reducers = combineReducers ({
-    root: rootReducer
-});
 
 let store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));
 
