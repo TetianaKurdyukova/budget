@@ -19,11 +19,11 @@ const Op = Sequelize.Op;
 const Balance = sequelize.define('balanceLog', {
     balanceName: Sequelize.STRING,
     summ: Sequelize.INTEGER,
-    date: Sequelize.DATE
+    date: Sequelize.DATEONLY
 });
 
 const TransactionLog = sequelize.define('transactionLog', {
-    date: Sequelize.DATE,
+    date: Sequelize.DATEONLY,
     user: Sequelize.STRING,
     summ: Sequelize.INTEGER,
     source: Sequelize.STRING,

@@ -16,98 +16,64 @@ const transactionsAll = (`query transactions{
         }
       }`);
 
-let feedReducer = (state, action) => {
-    if (state === undefined) {
-        return {state: 'Empty state'};
+let rootReducer = (state, action) => {
+    if (state === undefined){
+        return {status: null, payload: [], error: null};
     }
-    if (action.type === 'SET_STATUS') {
-        return {status: action.status, payload: action.payload, error:action.error};
+    if (action.type === 'SET_STATUS'){
+        return {status: action.status, payload: action.payload, error: action.error};
     }
     return state;
 };
 
 const reducers = combineReducers ({
-    feed: feedReducer
+    root: rootReducer
 });
-const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));
 
-//console.log(store);
+let store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));
 
-const actionPending = () => ({type: 'SET_STATUS', status: 'PENDING', payload: null, error: null});
+store.subscribe(() => console.log('subscribe', store.getState()))
+
+const actionPending = () => ({type: 'SET_STATUS', status: 'PENDING', payload: [], error: null});
 const actionResolved = payload => ({type: 'SET_STATUS', status: 'RESOLVED', payload, error: null});
 const actionRejected = error => ({type: 'SET_STATUS', status: 'REJECTED', payload: null, error});
 
 function actionFetch() {
-    return (async function (dispatch) {
+    return dispatch => {
         dispatch(actionPending());
-        try {
-            dispatch(actionResolved((await gql.request(transactionsAll)
-            .then(data => (console.log(data), data))).transactionLog
-            ));
-        }
-        catch (e) {
-            dispatch(actionRejected(e));
-        };
-    });
+        gql.request(transactionsAll)
+                .then(resp => dispatch(actionResolved(resp.transactions)))
+                .catch(error => dispatch(actionRejected(error)));
+    };
 }
 
-store.dispatch(actionFetch());
-store.subscribe(() => console.log('subscribe', store.getState()));
-
-let mapStateToProps = state => ({feed: state.feed});
-let mapDispatchToProps = actionFetch();
-
 class MainBlock extends Component {
+    componentDidMount() {
+        store.dispatch(actionFetch());
+    }
+
     render() {
-        console.log('mainBlock', this.props);
-        if (this.props.feed.status === 'PENDING') {
-            return (
-                <p>Data is loading</p>
-            );
-        }
-        else if (this.props.feed.status === 'REJECTED') {
-            return (
-                <p>Error</p>
-            );
-        }
-        else if (this.props.feed.status === 'RESOLVED') {
-            return (
-                <div className='MainBlock'>
-                    {this.props.feed.payload.map(transactionLog => <transactionLog transactionLog = {transactionLog} />)}
-                    <button></button>
-                </div>
-            );
-        }
+        const { error, payload, status } = this.props.root;
+            console.log('status: ' + status + ', payload: ' + payload)
+        return (
+
+            <ul>
+            {payload.map(t =>
+                <li key={t.id}>{t.user}, {t.summ}</li>
+            )}
+            </ul>
+        );
     }
 };
 
-MainBlock = connect(mapStateToProps)(MainBlock);
-
-class Post extends Component {
-    render() {
-        console.log('post', this.props);
-        return (
-            <div className='Post'>
-                <div className='Article'>
-                    
-                    
-                </div>
-            </div>
-        );
-    };
-};
-
-
-
-
+MainBlock = connect(s => s)(MainBlock);
 
 class App extends Component {
   render() {
     return (
-        <div>
-            
-            <Post />
-        </div>
+        <Provider store = {store} >
+            <MainBlock />
+        </Provider>
     );
   }
 }
