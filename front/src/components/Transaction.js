@@ -8,6 +8,7 @@ class Transaction extends Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        
         this.state = {
           user: ''
         }
@@ -30,25 +31,45 @@ class Transaction extends Component {
         this.props.createTransaction(transaction);
     }
     
+    listView(data, index){
+        return (
+          <div className="row">
+            <div className="col-md-10">
+              <li key={index} className="list-group-item clearfix">
+                {data.user}
+              </li>
+            </div>
+            <div className="col-md-2">
+              <button onClick={(e) => this.deleteTransaction(e, index)} className="btn btn-danger">
+                Remove
+              </button>
+            </div>
+        </div> 
+        )
+    }
+    deleteTransaction(e, index){
+        e.preventDefault();
+        this.props.deleteTransaction(index);
+    }
+    
     render() {
-
-    return(
-      <div>
-        <h1>Clientside Transactions Application</h1>
-        <hr />
-        { <ul>
-          {this.props.transactions.map((transaction, i) => <li key={i}>{transaction.user}</li> )}
-        </ul> }
-        <div>
-          <h3>Add Transaction Form</h3>
-          <form onSubmit={this.handleSubmit}>
-            <input type="text" onChange={this.handleChange} />
-            <input type="submit" />
-          </form>
-        </div>
-      </div>
-    )
-  }
+        return(
+            <div className="container">
+              <h1>Clientside Transactions Application</h1>
+              <div>
+                <h3>Add Transaction Form</h3>
+                <form onSubmit={this.handleSubmit}>
+                  <input type="text" onChange={this.handleChange} className="form-control" value={this.state.user}/><br />
+                  <input type="submit" className="btn btn-success" value="ADD"/>
+                </form>
+                <hr />
+              { <ul className="list-group">
+                {this.props.transactions.map((transaction, i) => this.listView(transaction, i))}
+              </ul> }
+              </div>
+            </div>
+        )
+    }
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -59,7 +80,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createTransaction: transaction => dispatch(transactionAction.createTransaction(transaction))
+    createTransaction: transaction => dispatch(transactionAction.createTransaction(transaction)),
+    deleteTransaction: index =>dispatch(transactionAction.deleteTransaction(index))
   }
 };
 
