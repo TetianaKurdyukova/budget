@@ -25,3 +25,4 @@ export function actionFetch() {
 
 export const GET_ALL_TRANSACTIONS = 'GET_ALL_TRANSACTIONS';
 export const CREATE_NEW_TRANSACTION = 'CREATE_NEW_TRANSACTION';
+export const REMOVE_TRANSACTION = 'REMOVE_TRANSACTION';

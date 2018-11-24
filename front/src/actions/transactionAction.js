@@ -1,4 +1,4 @@
-import * as actionTypes from './Transaction'
+import * as actionTypes from './actionTypes'
 
 export const createTransaction = (transaction) => {
     return {
@@ -6,4 +6,11 @@ export const createTransaction = (transaction) => {
       transaction: transaction
     }
 };
+
+export const deleteTransaction = (id) => {
+    return {
+        type: actionTypes.REMOVE_TRANSACTION,
+        id: id
+    }
+}
 

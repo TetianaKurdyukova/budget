@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import * as actionTypes from './Transaction'
-//import store from '../store/configureStore';
+import * as actionTypes from '../actions/actionTypes';
+import * as transactionAction from '../actions/transactionAction';
+import {connect}   from 'react-redux';
 
 class Transaction extends Component {
     constructor(props){
@@ -20,21 +21,46 @@ class Transaction extends Component {
 
       handleSubmit(e){
         e.preventDefault();
-        console.log(this.state.user);
+        let transaction = {
+            user: this.state.user
+        }
+        this.setState({
+            user: ''
+        });
+        this.props.createTransaction(transaction);
     }
     
     render() {
-        let user;
-        return(
-          <div>
-              <h3>Add Transaction Form</h3>
-              <form onSubmit={this.handleSubmit}>
-                <input type="text" onChange={this.handleChange} />
-                <input type="submit" />
-              </form>
-          </div>
-        )
-    }
+
+    return(
+      <div>
+        <h1>Clientside Transactions Application</h1>
+        <hr />
+        { <ul>
+          {this.props.transactions.map((transaction, i) => <li key={i}>{transaction.user}</li> )}
+        </ul> }
+        <div>
+          <h3>Add Transaction Form</h3>
+          <form onSubmit={this.handleSubmit}>
+            <input type="text" onChange={this.handleChange} />
+            <input type="submit" />
+          </form>
+        </div>
+      </div>
+    )
+  }
 };
 
-export default Transaction;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    transactions: state.transactions
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createTransaction: transaction => dispatch(transactionAction.createTransaction(transaction))
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
