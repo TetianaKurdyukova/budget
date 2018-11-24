@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import MainBlock from './components/MainBlock';
+import Transaction from './components/Transaction';
 
 class App extends Component {
   render() {
     return (
-        <MainBlock />
+        <Transaction />
     );
   }
 }

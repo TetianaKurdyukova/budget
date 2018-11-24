@@ -3,12 +3,11 @@ import { GraphQLClient } from 'graphql-request';
 const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
 const transactionsAll = (`query transactions{
     transactions{
-          id
-          user
-          date
-          summ
-        }
-      }`);
+        id
+        summ
+        user
+    }
+  }`);
 
 const actionPending = () => ({type: 'SET_STATUS', status: 'PENDING', payload: [], error: null});
 const actionResolved = payload => ({type: 'SET_STATUS', status: 'RESOLVED', payload, error: null});

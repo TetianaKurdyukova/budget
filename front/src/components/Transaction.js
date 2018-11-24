@@ -2,13 +2,20 @@ import React, { Component } from 'react';
 //import * as actionTypes from '../actions/actionTypes';
 import * as transactionAction from '../actions/transactionAction';
 import {connect}   from 'react-redux';
+import { actionFetch } from '../actions/actionTypes';
+import store from '../store/configureStore';
 
 class Transaction extends Component {
+    componentDidMount() {
+        store.dispatch(actionFetch());
+    }
+
     constructor(props){
         super(props);
         this.state = {
-          user: '',
-          summ: ''
+            user: '',
+            summ: ''
+        
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,50 +43,72 @@ class Transaction extends Component {
         this.props.createTransaction(transaction);
     }
     
+    
     listView(data, index){
         return (
-          <div className="row">
-            <div className="col-md-10">
-              <li key={index} className="list-group-item clearfix">
-                {data.user} {data.summ}
-              </li>
-            </div>
-            <div className="col-md-2">
-              <button onClick={(e) => this.deleteTransaction(e, index)} className="btn btn-danger">
-                Remove
-              </button>
-            </div>
-        </div> 
+            <tr key={index}>
+                <td>{data.user}</td>
+                <td>{data.summ}</td>
+                <td><button onClick={(e) => this.deleteTransaction(e, index)}>Удалить</button></td>
+            </tr>
         )
     }
+    
     deleteTransaction(e, index){
         e.preventDefault();
         this.props.deleteTransaction(index);
     }
     
     render() {
+        const { error, payload } = this.props.root;
         return(
             <div className="container">
                 <h3>Add Transaction Form</h3>
                 <form onSubmit={this.handleSubmit}>
-                    <input
-                        name='user'
-                        type='text'
-                        onChange={this.handleChange}
-                        className='form-control'
-                        value={this.state.user} />
-                    <input
-                        name='summ'
-                        type='text'
-                        onChange={this.handleChange}
-                        className='form-control'
-                        value={this.state.summ} />
-                    <input type="submit" className="btn btn-success" value="ADD"/>
+                    <table className='table1'>
+                        <tbody>
+                            <tr>
+                                <td>Пользователь</td>
+                                <td>Сумма</td>
+                                <td>Редактировать</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input
+                                        name='user'
+                                        type='text'
+                                        onChange={this.handleChange}
+                                        value={this.state.user} />
+                                </td>
+                                <td>
+                                    <input
+                                        name='summ'
+                                        type='text'
+                                        onChange={this.handleChange}
+                                        value={this.state.summ} />
+                                </td>
+                                <td>
+                                    <input type="submit" className="btn btn-success" value="ADD"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </form>
                 <hr />
-              { <ul className="list-group">
-                {this.props.transactions.map((transaction, i) => this.listView(transaction, i))}
-              </ul> }
+              { <table className="list-group">
+                    <tr>
+                        <td>Пользователь</td>
+                        <td>Сумма</td>
+                        <td>Редактировать</td>
+                    </tr>
+                    {payload.map(t =>
+                        <tr key={t.id}>
+                            <td>{t.user}</td>
+                            <td>{t.summ}</td>
+                        </tr>
+                    )}
+                    {this.props.transactions.map((transaction, i) => this.listView(transaction, i))}
+              </table> }
             </div>
         )
     }
@@ -97,5 +126,7 @@ const mapDispatchToProps = (dispatch) => {
     deleteTransaction: index =>dispatch(transactionAction.deleteTransaction(index))
   }
 };
+
+Transaction = connect(s => s)(Transaction);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
