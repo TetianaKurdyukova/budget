@@ -1,32 +1,37 @@
 import React, { Component } from 'react';
-import * as actionTypes from '../actions/actionTypes';
+//import * as actionTypes from '../actions/actionTypes';
 import * as transactionAction from '../actions/transactionAction';
 import {connect}   from 'react-redux';
 
 class Transaction extends Component {
     constructor(props){
         super(props);
+        this.state = {
+          user: '',
+          summ: ''
+        };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        
-        this.state = {
-          user: ''
-        }
     }
 
       handleChange(e){
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
         this.setState({
-          user: e.target.value
-        })
+          [name]: value
+        });
     }
 
       handleSubmit(e){
         e.preventDefault();
         let transaction = {
-            user: this.state.user
+            user: this.state.user,
+            summ: this.state.summ
         }
         this.setState({
-            user: ''
+            user: '',
+            summ: ''
         });
         this.props.createTransaction(transaction);
     }
@@ -36,7 +41,7 @@ class Transaction extends Component {
           <div className="row">
             <div className="col-md-10">
               <li key={index} className="list-group-item clearfix">
-                {data.user}
+                {data.user} {data.summ}
               </li>
             </div>
             <div className="col-md-2">
@@ -55,18 +60,26 @@ class Transaction extends Component {
     render() {
         return(
             <div className="container">
-              <h1>Clientside Transactions Application</h1>
-              <div>
                 <h3>Add Transaction Form</h3>
                 <form onSubmit={this.handleSubmit}>
-                  <input type="text" onChange={this.handleChange} className="form-control" value={this.state.user}/><br />
-                  <input type="submit" className="btn btn-success" value="ADD"/>
+                    <input
+                        name='user'
+                        type='text'
+                        onChange={this.handleChange}
+                        className='form-control'
+                        value={this.state.user} />
+                    <input
+                        name='summ'
+                        type='text'
+                        onChange={this.handleChange}
+                        className='form-control'
+                        value={this.state.summ} />
+                    <input type="submit" className="btn btn-success" value="ADD"/>
                 </form>
                 <hr />
               { <ul className="list-group">
                 {this.props.transactions.map((transaction, i) => this.listView(transaction, i))}
               </ul> }
-              </div>
             </div>
         )
     }

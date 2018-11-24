@@ -10,8 +10,7 @@ class MainBlock extends Component {
     }
 
     render() {
-        const { error, payload, status } = this.props.root;
-        //console.log('status: ' + status + ', payload: ' + payload)
+        const { error, payload } = this.props.root;
         return (
             <div>
                 <Transaction />
