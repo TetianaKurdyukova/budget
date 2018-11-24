@@ -22,3 +22,6 @@ export function actionFetch() {
                 .catch(error => dispatch(actionRejected(error)));
     };
 }
+
+export const GET_ALL_TRANSACTIONS = 'GET_ALL_TRANSACTIONS';
+export const CREATE_NEW_TRANSACTION = 'CREATE_NEW_TRANSACTION';

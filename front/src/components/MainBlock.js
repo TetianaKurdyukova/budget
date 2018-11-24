@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {connect}   from 'react-redux';
-import { actionFetch } from '../actions/transactions';
+import { actionFetch } from '../actions/actionTypes';
 import store from '../store/configureStore';
+import Transaction from './Transaction'
 
 class MainBlock extends Component {
     componentDidMount() {
@@ -12,12 +13,14 @@ class MainBlock extends Component {
         const { error, payload, status } = this.props.root;
             console.log('status: ' + status + ', payload: ' + payload)
         return (
-
-            <ul>
-            {payload.map(t =>
-                <li key={t.id}>{t.user}, {t.summ}</li>
-            )}
-            </ul>
+            <div>
+                <Transaction />
+                <ul>
+                {payload.map(t =>
+                    <li key={t.id}>{t.user}, {t.summ}</li>
+                )}
+                </ul>
+            </div>
         );
     }
 };
