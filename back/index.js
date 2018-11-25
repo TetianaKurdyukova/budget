@@ -94,12 +94,12 @@ var TransactionSchema = buildSchema(`
     }
     type Mutation {
         createTransaction(
-            date: String!,
+            date: String,
             user: String!,
             summ: Int!,
-            source: String!,
-            assignment: String!,
-            destination: String!,
+            source: String,
+            assignment: String,
+            destination: String,
             comment: String): TransactionLog
     }
 `);

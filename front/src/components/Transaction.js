@@ -45,6 +45,7 @@ class Transaction extends Component {
     
     
     listView(data, index){
+        
         return (
             <tr key={index}>
                 <td>{data.user}</td>
@@ -65,7 +66,7 @@ class Transaction extends Component {
             <div className="container">
                 <h3>Add Transaction Form</h3>
                 <form onSubmit={this.handleSubmit}>
-                    <table className='table1'>
+                    <table>
                         <tbody>
                             <tr>
                                 <td>Пользователь</td>
@@ -88,43 +89,46 @@ class Transaction extends Component {
                                         value={this.state.summ} />
                                 </td>
                                 <td>
-                                    <input type="submit" className="btn btn-success" value="ADD"/>
+                                    <input type="submit" value="ADD"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </form>
                 <hr />
-              { <table className="list-group">
-                    <tr>
-                        <td>Пользователь</td>
-                        <td>Сумма</td>
-                        <td>Редактировать</td>
-                    </tr>
-                    {payload.map(t =>
-                        <tr key={t.id}>
-                            <td>{t.user}</td>
-                            <td>{t.summ}</td>
+              { <table>
+                    <tbody>
+                        <tr>
+                            <td>Пользователь</td>
+                            <td>Сумма</td>
+                            <td>Редактировать</td>
                         </tr>
-                    )}
-                    {this.props.transactions.map((transaction, i) => this.listView(transaction, i))}
+                        {payload.map(t =>
+                            <tr key={t.id}>
+                                <td>{t.user}</td>
+                                <td>{t.summ}</td>
+                                <td></td>
+                            </tr>
+                        )}
+                        {this.props.transactions.map((transaction, i) => this.listView(transaction, i))}
+                    </tbody>
               </table> }
             </div>
         )
     }
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     transactions: state.transactions
-  }
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     createTransaction: transaction => dispatch(transactionAction.createTransaction(transaction)),
     deleteTransaction: index =>dispatch(transactionAction.deleteTransaction(index))
-  }
+  };
 };
 
 Transaction = connect(s => s)(Transaction);

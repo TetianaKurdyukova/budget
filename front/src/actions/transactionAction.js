@@ -2,9 +2,8 @@ import * as actionTypes from './actionTypes'
 
 export const createTransaction = (transaction) => {
     return {
-      type: actionTypes.CREATE_NEW_TRANSACTION,
-      transaction: transaction,
-      date: new Date()
+      type: actionTypes.newTransactionResolved,
+      transaction: transaction
     }
 };
 
