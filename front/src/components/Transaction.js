@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 //import * as actionTypes from '../actions/actionTypes';
-import * as transactionAction from '../actions/transactionAction';
 import {connect}   from 'react-redux';
-import { actionFetch } from '../actions/actionTypes';
+import actionFetch from '../actions/actionFetch';
+import actionCreate from '../actions/actionCreate';
+import actionDelete from '../actions/actionDelete';
 import store from '../store/configureStore';
 
 class Transaction extends Component {
@@ -126,8 +127,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createTransaction: transaction => dispatch(transactionAction.createTransaction(transaction)),
-    deleteTransaction: index =>dispatch(transactionAction.deleteTransaction(index))
+    createTransaction: transaction => dispatch(actionCreate(transaction)),
+    deleteTransaction: index =>dispatch(actionDelete(index))
   };
 };
 

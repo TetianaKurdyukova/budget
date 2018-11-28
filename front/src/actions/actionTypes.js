@@ -1,21 +1,3 @@
-import { GraphQLClient } from 'graphql-request';
-
-const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
-const transactionsAll = (`query transactions{
-    transactions{
-        id
-        summ
-        user
-    }
-  }`);
-
-const createTransaction = (`query createTransaction{
-    createTransaction{
-        summ
-        user
-    }
-  }`)
-
 //Fetch all transactions
 export const actionPending = () => ({type: 'SET_STATUS', status: 'PENDING', payload: [], error: null});
 export const actionResolved = payload => ({type: 'SET_STATUS', status: 'RESOLVED', payload, error: null});
@@ -33,21 +15,3 @@ export const REMOVE_TRANSACTION = 'REMOVE_TRANSACTION';
 export const REMOVE_TRANSACTION_SUCCESS = 'REMOVE_TRANSACTION_SUCCESS';
 export const REMOVE_TRANSACTION_REJECTED = 'REMOVE_TRANSACTION_REJECTED';
 
-
-export function actionFetch() {
-    return dispatch => {
-        dispatch(actionPending());
-        gql.request(transactionsAll)
-            .then(resp => dispatch(actionResolved(resp.transactions)))
-            .catch(error => dispatch(actionRejected(error)));
-    };
-}
-
-export function actionCreate() {
-    return dispatch => {
-        dispatch(newTransactionPending());
-        gql.request(createTransaction)
-            .then(resp => dispatch(newTransactionResolved(resp.createTransaction)))
-            .catch(error => dispatch(newTransactionRejected(error)));
-    }
-}
