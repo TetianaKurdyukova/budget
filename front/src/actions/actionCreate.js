@@ -7,11 +7,11 @@ const createTransaction = (`mutation createTransaction($user: String!, $summ: In
     createTransaction(user: $user, summ: $summ) {id}
   }`);
 
-const actionCreate = function() {
+const actionCreate = function(transaction) {
     return dispatch => {
         dispatch(actionTypes.newTransactionPending());
-        gql.request(createTransaction)
-            .then(resp => dispatch(actionTypes.newTransactionResolved(resp.createTransaction)))
+        gql.request(createTransaction, transaction)
+            .then(resp => dispatch(actionTypes.actionPending))
             .catch(error => dispatch(actionTypes.newTransactionRejected(error)));
     };
 };

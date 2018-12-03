@@ -15,14 +15,14 @@ class Transaction extends Component {
         super(props);
         this.state = {
             user: '',
-            summ: ''
+            summ: 0
         
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-      handleChange(e){
+    handleChange(e){
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -31,29 +31,29 @@ class Transaction extends Component {
         });
     }
 
-      handleSubmit(e){
+    handleSubmit(e){
         e.preventDefault();
         let transaction = {
             user: this.state.user,
-            summ: this.state.summ
+            summ: +this.state.summ
         }
+        console.log(transaction);
         this.setState({
             user: '',
-            summ: ''
+            summ: 0
         });
         this.props.createTransaction(transaction);
     }
     
     
     listView(data, index){
-        
         return (
             <tr key={index}>
                 <td>{data.user}</td>
                 <td>{data.summ}</td>
                 <td><button onClick={(e) => this.deleteTransaction(e, index)}>Удалить</button></td>
             </tr>
-        )
+        );
     }
     
     deleteTransaction(e, index){
@@ -120,16 +120,16 @@ class Transaction extends Component {
 };
 
 const mapStateToProps = (state) => {
-  return {
-    transactions: state.transactions
-  };
+    return {
+        transactions: state.transactions
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    createTransaction: transaction => dispatch(actionCreate(transaction)),
-    deleteTransaction: index =>dispatch(actionDelete(index))
-  };
+    return {
+        createTransaction: transaction => dispatch(actionCreate(transaction)),
+        deleteTransaction: index => dispatch(actionDelete(index))
+    }
 };
 
 Transaction = connect(s => s)(Transaction);
