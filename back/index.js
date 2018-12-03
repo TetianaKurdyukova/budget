@@ -116,8 +116,8 @@ async function transactionById(id){
    return await TransactionLog.findById(id)
 }
 
-async function createTransaction(){
-   return await TransactionLog.create(params)
+async function createTransaction(transaction){
+   return await TransactionLog.create(transaction)
 }
 
 // Root resolver
