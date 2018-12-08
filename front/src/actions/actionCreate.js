@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes'
+import actionFetch from './actionFetch'
 import { GraphQLClient } from 'graphql-request';
 
 const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
@@ -8,11 +9,12 @@ const createTransaction = (`mutation createTransaction($user: String!, $summ: In
   }`);
 
 const actionCreate = function(transaction) {
-    return dispatch => {
+    return async dispatch => {
         dispatch(actionTypes.newTransactionPending());
-        gql.request(createTransaction, transaction)
-            .then(resp => dispatch(actionTypes.actionPending))
+        await gql.request(createTransaction, transaction)
+            .then(resp => dispatch(actionTypes.newTransactionResolved))
             .catch(error => dispatch(actionTypes.newTransactionRejected(error)));
+        dispatch(actionFetch());
     };
 };
 

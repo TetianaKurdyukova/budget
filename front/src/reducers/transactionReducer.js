@@ -7,7 +7,7 @@ export default (state = [], action) => {
         ...state,
         Object.assign({}, action.transaction)
       ];
-      case actionTypes.REMOVE_TRANSACTION:
+      case actionTypes.deleteTransactionResolved:
       return state.filter((data, i) => i !== action.id);
       default:
             return state;

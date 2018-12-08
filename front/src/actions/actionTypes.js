@@ -11,7 +11,7 @@ export const newTransactionRejected = error => ({type: 'SET_STATUS', status: 'RE
 //export const RESET_NEW_TRANSACTION = 'RESET_NEW_TRANSACTION';
 
 //Remove transaction
-export const REMOVE_TRANSACTION = 'REMOVE_TRANSACTION';
-export const REMOVE_TRANSACTION_SUCCESS = 'REMOVE_TRANSACTION_SUCCESS';
-export const REMOVE_TRANSACTION_REJECTED = 'REMOVE_TRANSACTION_REJECTED';
+export const deleteTransactionPending  = () => ({type: 'SET_STATUS', status: 'PENDING_DELETE_TRANSACTION', payload: [], error: null});
+export const deleteTransactionResolved = payload => ({type: 'SET_STATUS', status: 'RESOLVED_DELETE_TRANSACTION', payload, error: null});
+export const deleteTransactionRejected = error => ({type: 'SET_STATUS', status: 'REJECTED_DELETE_TRANSACTION', payload: null, error});
 

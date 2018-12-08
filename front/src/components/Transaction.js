@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import * as actionTypes from '../actions/actionTypes';
 import {connect}   from 'react-redux';
 import actionFetch from '../actions/actionFetch';
 import actionCreate from '../actions/actionCreate';
@@ -45,20 +44,9 @@ class Transaction extends Component {
         this.props.createTransaction(transaction);
     }
     
-    
-    listView(data, index){
-        return (
-            <tr key={index}>
-                <td>{data.user}</td>
-                <td>{data.summ}</td>
-                <td><button onClick={(e) => this.deleteTransaction(e, index)}>Удалить</button></td>
-            </tr>
-        );
-    }
-    
-    deleteTransaction(e, index){
+    deleteTransaction(e, id){
         e.preventDefault();
-        this.props.deleteTransaction(index);
+        this.props.deleteTransaction(id);
     }
     
     render() {
@@ -85,7 +73,8 @@ class Transaction extends Component {
                                 <td>
                                     <input
                                         name='summ'
-                                        type='text'
+                                        type='number'
+                                        step="0.01"
                                         onChange={this.handleChange}
                                         value={this.state.summ} />
                                 </td>
@@ -97,23 +86,22 @@ class Transaction extends Component {
                     </table>
                 </form>
                 <hr />
-              { <table>
+                <table>
                     <tbody>
                         <tr>
                             <td>Пользователь</td>
                             <td>Сумма</td>
                             <td>Редактировать</td>
                         </tr>
-                        {payload.map(t =>
+                        {payload && payload.map(t =>
                             <tr key={t.id}>
                                 <td>{t.user}</td>
                                 <td>{t.summ}</td>
-                                <td></td>
+                                <td><button onClick={(e) => this.deleteTransaction(e, t.id)}>Удалить</button></td>
                             </tr>
                         )}
-                        {this.props.transactions.map((transaction, i) => this.listView(transaction, i))}
                     </tbody>
-              </table> }
+              </table>
             </div>
         )
     }
@@ -128,7 +116,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         createTransaction: transaction => dispatch(actionCreate(transaction)),
-        deleteTransaction: index => dispatch(actionDelete(index))
+        deleteTransaction: id => dispatch(actionDelete(id))
     }
 };
 
