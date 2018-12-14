@@ -14,20 +14,10 @@ const actionDelete = function(id) {
     	//debugger;
         dispatch(actionTypes.deleteTransactionPending());
         await gql.request(deleteTransaction, {id})
-            .then(resp => dispatch(actionTypes.deleteTransactionResolved))
+            //.then(resp => dispatch(actionTypes.actionPending))
             .catch(error => dispatch(actionTypes.deleteTransactionRejected(error)));
         dispatch(actionFetch());
     };
 };
 
 export default actionDelete;
-
-
-/*const actionDelete = (id) => {
-    return {
-        type: actionTypes.REMOVE_TRANSACTION,
-        id: id
-    }
-}
-
-export default actionDelete();*/

@@ -10,6 +10,11 @@ export const newTransactionResolved = payload => ({type: 'SET_STATUS', status: '
 export const newTransactionRejected = error => ({type: 'SET_STATUS', status: 'REJECTED_NEW_TRANSACTION', payload: null, error});
 //export const RESET_NEW_TRANSACTION = 'RESET_NEW_TRANSACTION';
 
+//Edit transaction
+export const editTransactionPending  = () => ({type: 'SET_STATUS', status: 'PENDING_EDIT_TRANSACTION', payload: [], error: null});
+export const editTransactionResolved = payload => ({type: 'SET_STATUS', status: 'RESOLVED_EDIT_TRANSACTION', payload, error: null});
+export const editTransactionRejected = error => ({type: 'SET_STATUS', status: 'REJECTED_EDIT_TRANSACTION', payload: null, error});
+
 //Remove transaction
 export const deleteTransactionPending  = () => ({type: 'SET_STATUS', status: 'PENDING_DELETE_TRANSACTION', payload: [], error: null});
 export const deleteTransactionResolved = payload => ({type: 'SET_STATUS', status: 'RESOLVED_DELETE_TRANSACTION', payload, error: null});

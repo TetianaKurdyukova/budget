@@ -32,6 +32,36 @@ const TransactionLog = sequelize.define('transactionLog', {
     comment: Sequelize.STRING
 });
 
+//fill db
+/*async function fillDB(){
+    await sequelize.sync()
+    var transaction1  = await TransactionLog.create( {
+                            date: '2018-09-28',
+                            user: 'Tetiana',
+                            summ: 250,
+                            sourceOfIncome: '',
+                            assignment: 'fuel'
+                        })
+    var transaction2  = await TransactionLog.create( {
+                            date: '2018-09-28',
+                            user: 'Tetiana',
+                            summ: 500,
+                            sourceOfIncome: '',
+                            assignment: 'products'
+                        })
+    
+    var transaction3  = await TransactionLog.create( {
+                            date: '2018-09-27',
+                            user: 'Maksym',
+                            summ: 100,
+                            sourceOfIncome: '',
+                            assignment: 'products'
+                        })
+       
+}
+fillDB();*/
+
+
 async function run(){
     await sequelize.sync({alter: true});
     console.log('synced');
@@ -71,7 +101,8 @@ var TransactionSchema = buildSchema(`
             assignment: String,
             destination: String,
             comment: String): TransactionLog
-        deleteTransaction (
+
+        deleteTransaction(
             id: Int!): TransactionLog
     }
 `);

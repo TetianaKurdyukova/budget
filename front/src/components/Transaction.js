@@ -13,14 +13,16 @@ class Transaction extends Component {
     constructor(props){
         super(props);
         this.state = {
-            user: '',
-            summ: 0
-        
+            user: this.props.user,
+            summ: this.props.summ,
+            isEditing: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggleEdit = this.toggleEdit.bind(this);
     }
-
+    
+  
     handleChange(e){
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -36,13 +38,19 @@ class Transaction extends Component {
             user: this.state.user,
             summ: +this.state.summ
         }
-        console.log(transaction);
+        //console.log(transaction);
         this.setState({
             user: '',
             summ: 0
         });
         this.props.createTransaction(transaction);
     }
+    
+    toggleEdit() {
+        this.setState({isEditing: !this.state.isEditing})
+    }
+    
+    
     
     deleteTransaction(e, id){
         e.preventDefault();
@@ -51,6 +59,15 @@ class Transaction extends Component {
     
     render() {
         const { error, payload } = this.props.root;
+        
+        if (this.state.isEditing) {
+            return (
+            <div>
+              <h1>edit transaction</h1>
+            </div>
+            )
+          }
+        
         return(
             <div className="container">
                 <h3>Add Transaction Form</h3>
@@ -67,6 +84,7 @@ class Transaction extends Component {
                                     <input
                                         name='user'
                                         type='text'
+                                        ref={(input)=>this.user = input}
                                         onChange={this.handleChange}
                                         value={this.state.user} />
                                 </td>
@@ -91,13 +109,14 @@ class Transaction extends Component {
                         <tr>
                             <td>Пользователь</td>
                             <td>Сумма</td>
-                            <td>Редактировать</td>
+                            <td colSpan="2">Редактировать</td>
                         </tr>
                         {payload && payload.map(t =>
                             <tr key={t.id}>
                                 <td>{t.user}</td>
                                 <td>{t.summ}</td>
                                 <td><button onClick={(e) => this.deleteTransaction(e, t.id)}>Удалить</button></td>
+                                <td><button onClick={this.toggleEdit}>Редактировать</button></td>
                             </tr>
                         )}
                     </tbody>
@@ -116,6 +135,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         createTransaction: transaction => dispatch(actionCreate(transaction)),
+        //editTransaction: transaction => dispatch(actionEdit(transaction)),
         deleteTransaction: id => dispatch(actionDelete(id))
     }
 };
