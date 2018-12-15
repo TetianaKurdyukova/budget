@@ -9,7 +9,7 @@ class Transaction extends Component {
     componentDidMount() {
         store.dispatch(actionFetch());
     }
-
+    
     constructor(props){
         super(props);
         this.state = {
@@ -49,8 +49,6 @@ class Transaction extends Component {
     toggleEdit() {
         this.setState({isEditing: !this.state.isEditing})
     }
-    
-    
     
     deleteTransaction(e, id){
         e.preventDefault();
@@ -124,6 +122,7 @@ class Transaction extends Component {
             </div>
         )
     }
+
 };
 
 const mapStateToProps = (state) => {
