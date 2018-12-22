@@ -12,7 +12,6 @@ const actionCreate = function(transaction) {
     return async dispatch => {
         dispatch(actionTypes.newTransactionPending());
         await gql.request(createTransaction, transaction)
-            //.then(resp => dispatch(actionTypes.newTransactionResolved))
             .catch(error => dispatch(actionTypes.newTransactionRejected(error)));
         dispatch(actionFetch());
     };

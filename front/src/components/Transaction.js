@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect}   from 'react-redux';
 import actionFetch from '../actions/actionFetch';
 import actionCreate from '../actions/actionCreate';
+import actionEdit from '../actions/actionEdit';
 import actionDelete from '../actions/actionDelete';
 import store from '../store/configureStore';
 
@@ -15,11 +16,11 @@ class Transaction extends Component {
         this.state = {
             user: this.props.user,
             summ: this.props.summ,
-            isEditing: false
+            create: true
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.toggleEdit = this.toggleEdit.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
     
   
@@ -38,7 +39,6 @@ class Transaction extends Component {
             user: this.state.user,
             summ: +this.state.summ
         }
-        //console.log(transaction);
         this.setState({
             user: '',
             summ: 0
@@ -46,25 +46,53 @@ class Transaction extends Component {
         this.props.createTransaction(transaction);
     }
     
-    toggleEdit() {
-        this.setState({isEditing: !this.state.isEditing})
-    }
+    handleEdit = (e, id) => {
+        e.preventDefault();
+        //debugger;
+        const editInfo = this.props.root.payload.find(function(t) {
+            if (t.id === id) {
+                return t;
+            }
+        })
+        
+        this.setState({
+            id: editInfo.id,
+            user: editInfo.user,
+            summ: editInfo.summ,
+            create: false
+        });
+    };
     
-    deleteTransaction(e, id){
+    handleUpdate = () => {
+        const updatedTransaction = {
+            id: this.state.id,
+            user: this.state.user,
+            summ: +this.state.summ
+        };
+
+        this.setState({
+            user: '',
+            summ: 0,
+            create: true
+        });
+        this.props.editTransaction(updatedTransaction);
+    }
+
+    handleDelete(e, id){
         e.preventDefault();
         this.props.deleteTransaction(id);
+        this.setState({
+            user: this.state.user,
+            summ: this.state.summ,
+            create: false
+        });
     }
     
     render() {
         const { error, payload } = this.props.root;
-        
-        if (this.state.isEditing) {
-            return (
-            <div>
-              <h1>edit transaction</h1>
-            </div>
-            )
-          }
+        const create = this.state.create ? 'Сохранить' : 'Обновить';
+        const inputIsEmpty = 
+            this.state.user === '' || this.state.summ === '' ? true : false;
         
         return(
             <div className="container">
@@ -73,16 +101,11 @@ class Transaction extends Component {
                     <table>
                         <tbody>
                             <tr>
-                                <td>Пользователь</td>
-                                <td>Сумма</td>
-                                <td>Редактировать</td>
-                            </tr>
-                            <tr>
                                 <td>
                                     <input
                                         name='user'
                                         type='text'
-                                        ref={(input)=>this.user = input}
+                                        placeholder="Enter User"
                                         onChange={this.handleChange}
                                         value={this.state.user} />
                                 </td>
@@ -91,11 +114,21 @@ class Transaction extends Component {
                                         name='summ'
                                         type='number'
                                         step="0.01"
+                                        placeholder="Enter Summ"
                                         onChange={this.handleChange}
                                         value={this.state.summ} />
                                 </td>
                                 <td>
-                                    <input type="submit" value="ADD"/>
+                                    <button
+                                    disabled={inputIsEmpty}
+                                    onClick={
+                                      this.state.create
+                                        ? this.handleSubmit
+                                        : this.handleUpdate
+                                    }
+                                    >
+                                    { create }
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -105,16 +138,17 @@ class Transaction extends Component {
                 <table>
                     <tbody>
                         <tr>
-                            <td>Пользователь</td>
-                            <td>Сумма</td>
-                            <td colSpan="2">Редактировать</td>
+                            <th>Пользователь</th>
+                            <th>Сумма</th>
+                            <th>Редактировать</th>
+                            <th>Удалить</th>
                         </tr>
                         {payload && payload.map(t =>
                             <tr key={t.id}>
                                 <td>{t.user}</td>
                                 <td>{t.summ}</td>
-                                <td><button onClick={(e) => this.deleteTransaction(e, t.id)}>Удалить</button></td>
-                                <td><button onClick={this.toggleEdit}>Редактировать</button></td>
+                                <td><button onClick={(e) => this.handleEdit(e, t.id)}>Редактировать</button></td>
+                                <td><button onClick={(e) => this.handleDelete(e, t.id)}>Удалить</button></td>
                             </tr>
                         )}
                     </tbody>
@@ -134,9 +168,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         createTransaction: transaction => dispatch(actionCreate(transaction)),
-        //editTransaction: transaction => dispatch(actionEdit(transaction)),
+        editTransaction: (id, transaction) => dispatch(actionEdit(id, transaction)),
         deleteTransaction: id => dispatch(actionDelete(id))
-    }
+    };
 };
 
 Transaction = connect(s => s)(Transaction);

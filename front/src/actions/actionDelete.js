@@ -11,10 +11,8 @@ const deleteTransaction = (`mutation deleteTransaction($id: Int!){
 
 const actionDelete = function(id) {
     return async dispatch => {
-    	//debugger;
         dispatch(actionTypes.deleteTransactionPending());
         await gql.request(deleteTransaction, {id})
-            //.then(resp => dispatch(actionTypes.actionPending))
             .catch(error => dispatch(actionTypes.deleteTransactionRejected(error)));
         dispatch(actionFetch());
     };

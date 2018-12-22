@@ -71,7 +71,17 @@ var TransactionSchema = buildSchema(`
             assignment: String,
             destination: String,
             comment: String): TransactionLog
-
+        
+        editTransaction(
+            id: Int!,
+            date: String,
+            user: String!,
+            summ: Int!,
+            source: String,
+            assignment: String,
+            destination: String,
+            comment: String): TransactionLog
+        
         deleteTransaction(
             id: Int!): TransactionLog
     }
@@ -86,11 +96,20 @@ async function transactionsByDate({from, to}){
 }
 
 async function transactionById(id){
-   return await TransactionLog.findById(id)
+   return await TransactionLog.findByPk(id)
 }
 
-async function createTransaction(transaction){
-   return await TransactionLog.create(transaction)
+async function createTransaction(newTransaction){
+   return await TransactionLog.create(newTransaction)
+}
+
+async function editTransaction(updatedTransaction){
+    console.log(updatedTransaction)
+    TransactionLog.update(
+        updatedTransaction,
+        { where: { id: updatedTransaction.id } }
+    )
+    return await TransactionLog.findByPk(updatedTransaction.id);
 }
 
 async function deleteTransaction({id}){
@@ -108,6 +127,7 @@ var TransactionResolver = {
     transactionsByDate,
     transactionById,
     createTransaction,
+    editTransaction,
     deleteTransaction
 };
 

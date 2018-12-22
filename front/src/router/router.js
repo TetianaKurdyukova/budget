@@ -15,16 +15,16 @@ class Routing extends Component{
                       <Link to="/">Home</Link>
                     </li>
                     <li>
-                      <Link to="/edit">Edit Form</Link>
+                      <Link to="/not-found">Not Found</Link>
                     </li>
                     <li>
-                      <Link to="/not-found">Not Found</Link>
+                      <Link to="/edit">Edit</Link>
                     </li>
                 </ul>
                 <Switch>
-                  <Route path="/edit" component={EditForm} />
-                  <Route path="/" component={Transaction} exact />                
-                  <Route component = {NotFound} />
+                  <Route path="/" component={ Transaction } exact />             
+                  <Route path="/edit" component={ EditForm } />
+                  <Route component = { NotFound } />
                 </Switch>
             </div>
         </Router>
