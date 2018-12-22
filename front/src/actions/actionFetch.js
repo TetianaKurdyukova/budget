@@ -7,6 +7,8 @@ const transactionsAll = (`query transactions{
         id
         summ
         user
+        title
+        comment
     }
   }`);
 

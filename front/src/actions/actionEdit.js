@@ -4,8 +4,8 @@ import { GraphQLClient } from 'graphql-request';
 
 const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
 
-const editTransaction = (`mutation editTransaction($user: String!, $summ: Int!, $id: Int!){
-    editTransaction(user: $user, summ: $summ, id: $id) {id}
+const editTransaction = (`mutation editTransaction($user: String!, $summ: Int!, $title: String!, $comment: String, $id: Int!){
+    editTransaction(user: $user, summ: $summ, title: $title, comment: $comment id: $id) {id}
   }`);
 
 

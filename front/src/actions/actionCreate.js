@@ -4,8 +4,8 @@ import { GraphQLClient } from 'graphql-request';
 
 const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
 
-const createTransaction = (`mutation createTransaction($user: String!, $summ: Int!){
-    createTransaction(user: $user, summ: $summ) {id}
+const createTransaction = (`mutation createTransaction($title: String!, $summ: Int!, $user: String!, $comment: String){
+    createTransaction(title: $title, summ: $summ, user: $user, comment: $comment) {id}
   }`);
 
 const actionCreate = function(transaction) {

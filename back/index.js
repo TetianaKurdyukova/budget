@@ -15,7 +15,6 @@ const sequelize = new Sequelize('budget', 'root', 'root',
 
 const Op = Sequelize.Op;
 
-
 const Balance = sequelize.define('balanceLog', {
     balanceName: Sequelize.STRING,
     summ: Sequelize.INTEGER,
@@ -25,6 +24,7 @@ const Balance = sequelize.define('balanceLog', {
 const TransactionLog = sequelize.define('transactionLog', {
     date: Sequelize.DATEONLY,
     user: Sequelize.STRING,
+    title: Sequelize.STRING,
     summ: Sequelize.INTEGER,
     source: Sequelize.STRING,
     assignment: Sequelize.STRING,
@@ -50,11 +50,10 @@ var TransactionSchema = buildSchema(`
     type TransactionLog {
         id: Int
         date: String
-        user: String
         summ: Int
-        source: String
+        user: String
+        title: String
         assignment: String
-        destination: String
         comment: String
     }
     type Query {
@@ -65,21 +64,19 @@ var TransactionSchema = buildSchema(`
     type Mutation {
         createTransaction(
             date: String,
-            user: String!,
             summ: Int!,
-            source: String,
+            user: String!,
+            title: String!,
             assignment: String,
-            destination: String,
             comment: String): TransactionLog
         
         editTransaction(
             id: Int!,
             date: String,
-            user: String!,
             summ: Int!,
-            source: String,
+            user: String!,
+            title: String!,
             assignment: String,
-            destination: String,
             comment: String): TransactionLog
         
         deleteTransaction(

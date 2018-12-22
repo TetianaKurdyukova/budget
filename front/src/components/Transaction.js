@@ -14,8 +14,10 @@ class Transaction extends Component {
     constructor(props){
         super(props);
         this.state = {
-            user: this.props.user,
+            title: this.props.title,
             summ: this.props.summ,
+            user: this.props.user,
+            comment: this.props.comment,
             create: true
         };
         this.handleChange = this.handleChange.bind(this);
@@ -36,12 +38,16 @@ class Transaction extends Component {
     handleSubmit(e){
         e.preventDefault();
         let transaction = {
+            title: this.state.title,
+            summ: +this.state.summ,
             user: this.state.user,
-            summ: +this.state.summ
+            comment: this.state.comment
         }
         this.setState({
+            title: '',
+            summ: 0,
             user: '',
-            summ: 0
+            comment: ''
         });
         this.props.createTransaction(transaction);
     }
@@ -54,11 +60,12 @@ class Transaction extends Component {
                 return t;
             }
         })
-        
         this.setState({
             id: editInfo.id,
-            user: editInfo.user,
+            title: editInfo.title,
             summ: editInfo.summ,
+            user: editInfo.user,
+            comment: editInfo.comment,
             create: false
         });
     };
@@ -66,13 +73,17 @@ class Transaction extends Component {
     handleUpdate = () => {
         const updatedTransaction = {
             id: this.state.id,
+            title: this.state.title,
+            summ: +this.state.summ,
             user: this.state.user,
-            summ: +this.state.summ
+            comment: this.state.comment,
         };
 
         this.setState({
-            user: '',
+            title: '',
             summ: 0,
+            user: '',
+            comment: '',
             create: true
         });
         this.props.editTransaction(updatedTransaction);
@@ -82,8 +93,10 @@ class Transaction extends Component {
         e.preventDefault();
         this.props.deleteTransaction(id);
         this.setState({
-            user: this.state.user,
+            title: this.state.title,
             summ: this.state.summ,
+            user: this.state.user,
+            comment: this.state.comment,
             create: false
         });
     }
@@ -92,7 +105,7 @@ class Transaction extends Component {
         const { error, payload } = this.props.root;
         const create = this.state.create ? 'Сохранить' : 'Обновить';
         const inputIsEmpty = 
-            this.state.user === '' || this.state.summ === '' ? true : false;
+            this.state.title === '' || this.state.summ === '' || this.state.user === '' || this.state.comment === '' ? true : false;
         
         return(
             <div className="container">
@@ -103,11 +116,11 @@ class Transaction extends Component {
                             <tr>
                                 <td>
                                     <input
-                                        name='user'
+                                        name='title'
                                         type='text'
-                                        placeholder="Enter User"
+                                        placeholder="Enter Title"
                                         onChange={this.handleChange}
-                                        value={this.state.user} />
+                                        value={this.state.title} />
                                 </td>
                                 <td>
                                     <input
@@ -117,6 +130,22 @@ class Transaction extends Component {
                                         placeholder="Enter Summ"
                                         onChange={this.handleChange}
                                         value={this.state.summ} />
+                                </td>
+                                <td>
+                                    <input
+                                        name='user'
+                                        type='text'
+                                        placeholder="Enter User"
+                                        onChange={this.handleChange}
+                                        value={this.state.user} />
+                                </td>
+                                <td>
+                                    <input
+                                        name='comment'
+                                        type='text'
+                                        placeholder="Enter Comment"
+                                        onChange={this.handleChange}
+                                        value={this.state.comment} />
                                 </td>
                                 <td>
                                     <button
@@ -138,15 +167,19 @@ class Transaction extends Component {
                 <table>
                     <tbody>
                         <tr>
-                            <th>Пользователь</th>
+                            <th>Наименование</th>
                             <th>Сумма</th>
+                            <th>Пользователь</th>
+                            <th>Комментарий</th>
                             <th>Редактировать</th>
                             <th>Удалить</th>
                         </tr>
                         {payload && payload.map(t =>
                             <tr key={t.id}>
-                                <td>{t.user}</td>
+                                <td>{t.title}</td>
                                 <td>{t.summ}</td>
+                                <td>{t.user}</td>
+                                <td>{t.comment}</td>
                                 <td><button onClick={(e) => this.handleEdit(e, t.id)}>Редактировать</button></td>
                                 <td><button onClick={(e) => this.handleDelete(e, t.id)}>Удалить</button></td>
                             </tr>
@@ -170,7 +203,7 @@ const mapDispatchToProps = (dispatch) => {
         createTransaction: transaction => dispatch(actionCreate(transaction)),
         editTransaction: (id, transaction) => dispatch(actionEdit(id, transaction)),
         deleteTransaction: id => dispatch(actionDelete(id))
-    };
+    }
 };
 
 Transaction = connect(s => s)(Transaction);
