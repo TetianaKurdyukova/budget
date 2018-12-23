@@ -40,25 +40,14 @@ const User = sequelize.define('user', {
     phone: Sequelize.STRING
 });
 
-TransactionLog.hasMany(User);
-
 async function run(){
     await sequelize.sync({alter: true});
     console.log('synced');
 }
-
 run();
 
 const express = require('express');
-//const bodyParser = require('body-parser');
 const app = express();
-/*var cookieSession = require('cookie-session');
-app.set('trust proxy', 1);
-
-app.use(cookieSession({
-    name: "session",
-    keys: ['key1', 'key2']
-}))*/
 
 const express_graphql = require('express-graphql');
 const { buildSchema } = require('graphql');
@@ -85,9 +74,9 @@ var TransactionSchema = buildSchema(`
     }
     
     type Query {
-        transactions: [TransactionLog],
-        transactionsByDate(date: String): [TransactionLog],
-        transactionById(id: Int!): TransactionLog
+        transactionsByDate(date: String!): [TransactionLog],
+        transactionById(id: Int!): TransactionLog,
+        signIn(email: String!, password: String!): User
     }
     type Mutation {
         createTransaction(
@@ -119,24 +108,25 @@ var TransactionSchema = buildSchema(`
     }
 `);
 
-async function transactions(){
-   return await TransactionLog.findAll()
+async function transactionsByDate(params){
+    let dateParam = new Date(params.date);
+    let startDate = dateParam.setHours(0, 0, 0, 0);
+    let endDate = dateParam.setHours(23, 59, 59, 999);
+    return await TransactionLog.findAll({
+        where: {
+            createdAt: {
+                [Op.lte]: endDate,
+                [Op.gte]: startDate
+            }
+        }
+    })
 }
-
-async function transactionsByDate({from, to}){
-   return await TransactionLog.findAll({ where: { date: {[Op.lt]: new Date(to)} } }) //tune it up to createAt > from and createdAt < to
-}
-
-//async function transactionById(id){
-//   return await TransactionLog.findByPk(id)
-//}
 
 async function createTransaction(newTransaction){
    return await TransactionLog.create(newTransaction)
 }
 
 async function editTransaction(updatedTransaction){
-    console.log(updatedTransaction)
     TransactionLog.update(
         updatedTransaction,
         { where: { id: updatedTransaction.id } }
@@ -145,7 +135,6 @@ async function editTransaction(updatedTransaction){
 }
 
 async function deleteTransaction({id}){
-    console.log(id)
     let transaction = await TransactionLog.findById(id)
     if (transaction){
         transaction.destroy();
@@ -154,50 +143,16 @@ async function deleteTransaction({id}){
 }
 
 async function createUser(newUser){
-  return await User.create(newUser)
+  return await User.create(newUser);
 }
-
-/*async function signIn({email, password},{session}){
-    console.log(email, password, session)
-    let user = await User.findOne({where:{
-        email,
-        password
-    }})
-    if (user)
-        session.user = {email: user.email, userId: user.id};
-    else
-    delete session.user
-    return user;
-}
-
-async function getUserTransactions({userId}){
-    return await TransactionLog.findAll({where:{
-        userId
-    }});
-}
-
-async function getMyTransactions(arg, {session}){
-    if(!session.user)
-        return null;
-
-    let userId = session.user.userId
-    return await TransactionLog.findAll({where:{
-        userId
-    }})
-}*/
 
 // Root resolver
 var TransactionResolver = {
-    transactions,
     transactionsByDate,
-    //transactionById,
     createTransaction,
     editTransaction,
     deleteTransaction,
     createUser
-    /*signIn,
-    getUserTransactions,
-    getMyTransactions*/
 };
 
 // respond with "hello world" when a GET request is made to the homepage
@@ -211,7 +166,6 @@ app.use('/graphql', express_graphql({
     schema: TransactionSchema,
     rootValue: TransactionResolver,
     graphiql: true
-    //context: {session: req.session}
 }));
 
 app.listen(8000);

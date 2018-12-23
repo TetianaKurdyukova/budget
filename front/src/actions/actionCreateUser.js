@@ -1,5 +1,4 @@
 import * as actionTypes from './actionTypes'
-import actionFetch from './actionFetch'
 import { GraphQLClient } from 'graphql-request';
 
 const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });

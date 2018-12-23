@@ -23,3 +23,7 @@ export const newUserPending  = () => ({type: 'CREATE_USER', status: 'PENDING_NEW
 export const newUserResolved = payload => ({type: 'CREATE_USER', status: 'RESOLVED_NEW_USER', payload, error: null});
 export const newUserRejected = error => ({type: 'CREATE_USER', status: 'REJECTED_NEW_USER', payload: null, error});
 
+//Sign In
+export const signInPending  = () => ({type: 'SIGNIN', status: 'PENDING_SIGNIN', payload: [], error: null});
+export const signInResolved = payload => ({type: 'SIGNIN', status: 'RESOLVED_SIGNIN', payload, error: null});
+export const signInRejected = error => ({type: 'SIGNIN', status: 'REJECTED_SIGNIN', payload: null, error});

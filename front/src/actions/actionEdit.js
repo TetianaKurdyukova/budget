@@ -8,14 +8,13 @@ const editTransaction = (`mutation editTransaction($user: String!, $summ: Int!, 
     editTransaction(user: $user, summ: $summ, title: $title, comment: $comment id: $id) {id}
   }`);
 
-
-const actionEdit = function(transaction) {
+const actionEdit = function(transaction, date) {
     return async dispatch => {
     	//debugger;
         dispatch(actionTypes.editTransactionPending());
         await gql.request(editTransaction, transaction)
             .catch(error => dispatch(actionTypes.editTransactionRejected(error)));
-        dispatch(actionFetch());
+        dispatch(actionFetch(date));
     };
 };
 

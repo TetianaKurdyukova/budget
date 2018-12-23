@@ -8,12 +8,12 @@ const createTransaction = (`mutation createTransaction($title: String!, $summ: I
     createTransaction(title: $title, summ: $summ, user: $user, comment: $comment) {id}
   }`);
 
-const actionCreate = function(transaction) {
+const actionCreate = function(transaction, date) {
     return async dispatch => {
         dispatch(actionTypes.newTransactionPending());
         await gql.request(createTransaction, transaction)
             .catch(error => dispatch(actionTypes.newTransactionRejected(error)));
-        dispatch(actionFetch());
+        dispatch(actionFetch(date));
     };
 };
 

@@ -4,11 +4,12 @@ import actionFetch from '../actions/actionFetch';
 import actionCreate from '../actions/actionCreate';
 import actionEdit from '../actions/actionEdit';
 import actionDelete from '../actions/actionDelete';
+import Calendar from 'react-calendar';
 import store from '../store/configureStore';
 
 class Transaction extends Component {
     componentDidMount() {
-        store.dispatch(actionFetch());
+        store.dispatch(actionFetch(this.state.date));
     }
     
     constructor(props){
@@ -18,14 +19,22 @@ class Transaction extends Component {
             summ: this.props.summ,
             user: this.props.user,
             comment: this.props.comment,
+            date: new Date(),
             create: true
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.onDateChange = this.onDateChange.bind(this);
+    }
+   
+    onDateChange(date) {
+        this.setState({
+            date
+        });
+        this.props.fetchTransactions(date);
     }
     
-  
     handleChange(e){
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -49,12 +58,11 @@ class Transaction extends Component {
             user: '',
             comment: ''
         });
-        this.props.createTransaction(transaction);
+        this.props.createTransaction(transaction, this.state.date);
     }
     
     handleEdit = (e, id) => {
         e.preventDefault();
-        //debugger;
         const editInfo = this.props.root.payload.find(function(t) {
             if (t.id === id) {
                 return t;
@@ -86,12 +94,12 @@ class Transaction extends Component {
             comment: '',
             create: true
         });
-        this.props.editTransaction(updatedTransaction);
+        this.props.editTransaction(updatedTransaction, this.state.date);
     }
 
     handleDelete(e, id){
         e.preventDefault();
-        this.props.deleteTransaction(id);
+        this.props.deleteTransaction(id, this.state.date);
         this.setState({
             title: this.state.title,
             summ: this.state.summ,
@@ -103,12 +111,18 @@ class Transaction extends Component {
     
     render() {
         const { error, payload } = this.props.root;
-        const create = this.state.create ? 'Сохранить' : 'Обновить';
+        const create = this.state.create ? 'Save' : 'Update';
         const inputIsEmpty = 
             this.state.title === '' || this.state.summ === '' || this.state.user === '' || this.state.comment === '' ? true : false;
         
         return(
             <div className="container">
+                <Calendar
+                    calendarType='ISO 8601'
+                    onChange={this.onDateChange}
+                    value={this.state.date}
+                />
+    
                 <h3>Add Transaction Form</h3>
                 <form onSubmit={this.handleSubmit}>
                     <table>
@@ -167,12 +181,12 @@ class Transaction extends Component {
                 <table>
                     <tbody>
                         <tr>
-                            <th>Наименование</th>
-                            <th>Сумма</th>
-                            <th>Пользователь</th>
-                            <th>Комментарий</th>
-                            <th>Редактировать</th>
-                            <th>Удалить</th>
+                            <th>Name Of Product</th>
+                            <th>Summ</th>
+                            <th>User</th>
+                            <th>Comment</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
                         {payload && payload.map(t =>
                             <tr key={t.id}>
@@ -180,14 +194,14 @@ class Transaction extends Component {
                                 <td>{t.summ}</td>
                                 <td>{t.user}</td>
                                 <td>{t.comment}</td>
-                                <td><button onClick={(e) => this.handleEdit(e, t.id)}>Редактировать</button></td>
-                                <td><button onClick={(e) => this.handleDelete(e, t.id)}>Удалить</button></td>
+                                <td><button onClick={(e) => this.handleEdit(e, t.id)}>Edit</button></td>
+                                <td><button onClick={(e) => this.handleDelete(e, t.id)}>Delete</button></td>
                             </tr>
                         )}
                     </tbody>
               </table>
             </div>
-        )
+        );
     }
 
 };
@@ -200,10 +214,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createTransaction: transaction => dispatch(actionCreate(transaction)),
-        editTransaction: (id, transaction) => dispatch(actionEdit(id, transaction)),
-        deleteTransaction: id => dispatch(actionDelete(id))
-    }
+        createTransaction: (transaction, date) => dispatch(actionCreate(transaction, date)),
+        editTransaction: (id, transaction, date) => dispatch(actionEdit(id, transaction, date)),
+        deleteTransaction: (id, date) => dispatch(actionDelete(id, date)),
+        fetchTransactions: date => dispatch(actionFetch(date))
+    };
 };
 
 Transaction = connect(s => s)(Transaction);

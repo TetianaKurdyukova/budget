@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {connect}   from 'react-redux';
 import actionCreateUser from '../actions/actionCreateUser';
-import store from '../store/configureStore';
 
 class SignUpForm extends Component {
     constructor(props) {
@@ -31,6 +30,7 @@ class SignUpForm extends Component {
     
     handleSubmit(e){
         e.preventDefault();
+        console.log('congrats!');
         let user = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -38,7 +38,6 @@ class SignUpForm extends Component {
             email: this.state.email,
             password: this.state.password
         };
-        console.log(this.state);
         this.setState({
             firstName: '',
             lastName: '',
@@ -47,6 +46,7 @@ class SignUpForm extends Component {
             password: ''
         });
         this.props.createUser(user);
+        
     }
     
     render(){
