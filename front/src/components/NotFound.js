@@ -7,8 +7,8 @@ class NotFound extends Component {
                 <h2>Not found</h2>
                 <p>There is nothing to display</p>
             </div>
-        )
+        );
     }
-}
+};
 
 export default NotFound;
