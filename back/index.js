@@ -9,7 +9,7 @@ const sequelize = new Sequelize('budget', 'root', 'root',
             min: 0,
             idle: 10000
         },
-        logging: true
+        logging: false
     }
 );
 
@@ -50,15 +50,15 @@ async function run(){
 run();
 
 const express = require('express');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const app = express();
-var cookieSession = require('cookie-session');
+/*var cookieSession = require('cookie-session');
 app.set('trust proxy', 1);
 
 app.use(cookieSession({
     name: "session",
     keys: ['key1', 'key2']
-}))
+}))*/
 
 const express_graphql = require('express-graphql');
 const { buildSchema } = require('graphql');
@@ -76,6 +76,9 @@ var TransactionSchema = buildSchema(`
         comment: String
     }
     type User {
+        firstName: String
+        lastName: String
+        password: String
         email: String
         phone: String
         id: Int
@@ -85,7 +88,6 @@ var TransactionSchema = buildSchema(`
         transactions: [TransactionLog],
         transactionsByDate(date: String): [TransactionLog],
         transactionById(id: Int!): TransactionLog
-        signIn(username: String!, password: String!): User
     }
     type Mutation {
         createTransaction(
@@ -111,8 +113,8 @@ var TransactionSchema = buildSchema(`
         createUser(
             email: String!,
             password: String!,
-            firstName: String,
-            lastName: String,
+            firstName: String!,
+            lastName: String!,
             phone: String!): User
     }
 `);
@@ -151,11 +153,11 @@ async function deleteTransaction({id}){
     return id 
 }
 
-async function createUser(params){
-  return await User.create(params)
+async function createUser(newUser){
+  return await User.create(newUser)
 }
 
-async function signIn({email, password},{session}){
+/*async function signIn({email, password},{session}){
     console.log(email, password, session)
     let user = await User.findOne({where:{
         email,
@@ -182,7 +184,7 @@ async function getMyTransactions(arg, {session}){
     return await TransactionLog.findAll({where:{
         userId
     }})
-}
+}*/
 
 // Root resolver
 var TransactionResolver = {
@@ -192,10 +194,10 @@ var TransactionResolver = {
     createTransaction,
     editTransaction,
     deleteTransaction,
-    createUser,
-    signIn,
+    createUser
+    /*signIn,
     getUserTransactions,
-    getMyTransactions
+    getMyTransactions*/
 };
 
 // respond with "hello world" when a GET request is made to the homepage
@@ -205,11 +207,11 @@ app.get('/', function(req, res) {
 
 // Create an express server and a GraphQL endpoint
 app.use(cors());
-app.use('/graphql', express_graphql(req => ({
+app.use('/graphql', express_graphql({
     schema: TransactionSchema,
     rootValue: TransactionResolver,
-    graphiql: true,
-    context: {session: req.session}
-})));
+    graphiql: true
+    //context: {session: req.session}
+}));
 
 app.listen(8000);

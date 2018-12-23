@@ -18,3 +18,8 @@ export const deleteTransactionPending  = () => ({type: 'SET_STATUS', status: 'PE
 export const deleteTransactionResolved = payload => ({type: 'SET_STATUS', status: 'RESOLVED_DELETE_TRANSACTION', payload, error: null});
 export const deleteTransactionRejected = error => ({type: 'SET_STATUS', status: 'REJECTED_DELETE_TRANSACTION', payload: null, error});
 
+//Create new user
+export const newUserPending  = () => ({type: 'CREATE_USER', status: 'PENDING_NEW_USER', payload: [], error: null});
+export const newUserResolved = payload => ({type: 'CREATE_USER', status: 'RESOLVED_NEW_USER', payload, error: null});
+export const newUserRejected = error => ({type: 'CREATE_USER', status: 'REJECTED_NEW_USER', payload: null, error});
+

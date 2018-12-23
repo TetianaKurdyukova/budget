@@ -1,33 +1,52 @@
 import React, { Component } from 'react';
+import {connect}   from 'react-redux';
+import actionCreateUser from '../actions/actionCreateUser';
+import store from '../store/configureStore';
 
 class SignUpForm extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         
         this.state = {
-            email: '',
-            password: ''
+            firstName: this.props.firstName,
+            lastName: this.props.lastName,
+            phone: this.props.tphone,
+            email: this.props.email,
+            password: this.props.password
         };
         
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     
-    handleChange(e) {
-        let target = e.target;
-        let value = target.type === 'checkbox' ? target.checked : target.value;
-        let name = target.name;
-        
+    handleChange(e){
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
         this.setState({
-            [name]: value
+          [name]: value
         });
     }
     
-    handleSubmit(e) {
+    
+    handleSubmit(e){
         e.preventDefault();
-        
-        console.log('The form was submitted with the following data:');
+        let user = {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            phone: this.state.phone,
+            email: this.state.email,
+            password: this.state.password
+        };
         console.log(this.state);
+        this.setState({
+            firstName: '',
+            lastName: '',
+            phone: '',
+            email: '',
+            password: ''
+        });
+        this.props.createUser(user);
     }
     
     render(){
@@ -36,27 +55,57 @@ class SignUpForm extends Component {
                 <h2>Sign Up Form</h2>
                 <form onSubmit={this.handleSubmit}>
                     <div>
-                        <label htmlFor="firstName">First Name: </label>
-                        <input id="first-name" type="text" placeholder="Enter your first name" value={this.state.firstName} onChange={this.handleChange} />
+                        <label>First Name: </label>
+                        <input
+                            name='firstName'
+                            type='text'
+                            placeholder="Enter FirstName"
+                            ref={(input)=>this.firstName = input}
+                            onChange={this.handleChange}
+                            value={this.state.firstName} />
                     </div>
                     <div>
-                        <label htmlFor="lastName">Last Name: </label>
-                        <input id="last-name" type="text" placeholder="Enter your last name" value={this.state.lastName} onChange={this.handleChange} />
+                        <label>Last Name: </label>
+                        <input
+                            name='lastName'
+                            type='text'
+                            placeholder="Enter LastName"
+                            ref={(input)=>this.lastName = input}
+                            onChange={this.handleChange}
+                            value={this.state.lastName} />
                     </div>
                     <div>
-                        <label htmlFor="phone">Phone Number: </label>
-                        <input id="phone" type="tel" placeholder="Enter your phone number" value={this.state.phone} onChange={this.handleChange} />
+                        <label>Phone Number: </label>
+                        <input
+                            name='phone'
+                            type='tel'
+                            placeholder="Enter Phone Number"
+                            ref={(input)=>this.phone = input}
+                            onChange={this.handleChange}
+                            value={this.state.phone} />
                     </div>
                     <div>
-                        <label htmlFor="email">Email: </label>
-                        <input id="email" type="email" placeholder="Enter your email" name="email" value={this.state.email} onChange={this.handleChange} />
+                        <label>Email: </label>
+                        <input
+                            name='email'
+                            type='email'
+                            placeholder="Enter Email"
+                            ref={(input)=>this.email = input}
+                            onChange={this.handleChange}
+                            value={this.state.email} />
                     </div>
                     <div>
-                        <label htmlFor="password">Password: </label>
-                        <input id='password' autoComplete='password' type="password" placeholder="Enter your password" name="password" value={this.state.password} onChange={this.handleChange} />
+                        <label>Password: </label>
+                        <input
+                            name='password'
+                            type='password'
+                            placeholder="Enter Password"
+                            ref={(input)=>this.password = input}
+                            onChange={this.handleChange}
+                            value={this.state.password} />
                     </div>
                     <div>
-                        <button>Sign Up</button>
+                        <button onSubmit={this.handleSubmit}>Sign Up</button>
                     </div>
                 </form>
             </div>
@@ -64,4 +113,18 @@ class SignUpForm extends Component {
     }
 }
 
-export default SignUpForm;
+const mapStateToProps = (state) => {
+    return {
+        users: state.users
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createUser: user => dispatch(actionCreateUser(user))
+    };
+};
+
+SignUpForm = connect(s => s)(SignUpForm);
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpForm);

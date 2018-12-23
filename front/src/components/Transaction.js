@@ -42,7 +42,7 @@ class Transaction extends Component {
             summ: +this.state.summ,
             user: this.state.user,
             comment: this.state.comment
-        }
+        };
         this.setState({
             title: '',
             summ: 0,
@@ -59,7 +59,7 @@ class Transaction extends Component {
             if (t.id === id) {
                 return t;
             }
-        })
+        });
         this.setState({
             id: editInfo.id,
             title: editInfo.title,
@@ -76,7 +76,7 @@ class Transaction extends Component {
             title: this.state.title,
             summ: +this.state.summ,
             user: this.state.user,
-            comment: this.state.comment,
+            comment: this.state.comment
         };
 
         this.setState({
@@ -135,7 +135,7 @@ class Transaction extends Component {
                                     <input
                                         name='user'
                                         type='text'
-                                        placeholder="Enter User"
+                                        placeholder='Enter User'
                                         onChange={this.handleChange}
                                         value={this.state.user} />
                                 </td>
