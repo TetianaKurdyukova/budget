@@ -99,6 +99,7 @@ class SignUpForm extends Component {
                         <input
                             name='password'
                             type='password'
+                            autocomplete='password'
                             placeholder="Enter Password"
                             ref={(input)=>this.password = input}
                             onChange={this.handleChange}

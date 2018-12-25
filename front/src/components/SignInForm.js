@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {connect}   from 'react-redux';
 import actionSignIn from '../actions/actionSignIn';
-import store from '../store/configureStore';
 
 class SignInForm extends Component {
     constructor(props) {
@@ -31,22 +30,19 @@ class SignInForm extends Component {
             email: this.state.email,
             password: this.state.password
         };
-        console.log('you are signed in');
+        console.log(this.state.email + ' you are signed in');
         this.setState({
             email: '',
             password: ''
         });
-        console.log(this.props);
-        console.log(this.props.signIn);
         this.props.signIn(user);
-        
     }
     
     render() {
         return (
-            <div>
-                <h2>Sign In Form</h2>
+            <div class='container'>
                 <form onSubmit={this.handleSubmit}>
+                    <h2>Sign In Form</h2>
                     <div>
                         <label>Email: </label>
                         <input
@@ -63,6 +59,7 @@ class SignInForm extends Component {
                             name='password'
                             type='password'
                             placeholder="Enter Password"
+                            autoComplete='password'
                             ref={(input)=>this.password = input}
                             onChange={this.handleChange}
                             value={this.state.password} />

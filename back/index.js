@@ -9,7 +9,7 @@ const sequelize = new Sequelize('budget', 'root', 'root',
             min: 0,
             idle: 10000
         },
-        logging: false
+        logging: true
     }
 );
 
@@ -47,10 +47,20 @@ async function run(){
 run();
 
 const express = require('express');
+var bodyParser = require('body-parser')
 const app = express();
+var cookieSession = require('cookie-session');
+
+app.set('trust proxy', 1);
+
+app.use(cookieSession({
+  name: "session",
+  keys: ['key1', 'key2']
+}))
 
 const express_graphql = require('express-graphql');
 const { buildSchema } = require('graphql');
+app.use(bodyParser.json());
 app.use(express.static('public'));
 const cors  = require('cors');
 
@@ -76,7 +86,8 @@ var TransactionSchema = buildSchema(`
     type Query {
         transactionsByDate(date: String!): [TransactionLog],
         transactionById(id: Int!): TransactionLog,
-        signIn(email: String!, password: String!): User
+        signIn(email: String!, password: String!): User,
+        isSignedIn: User
     }
     type Mutation {
         createTransaction(
@@ -146,13 +157,38 @@ async function createUser(newUser){
   return await User.create(newUser);
 }
 
+async function signIn({email, password},{session}){
+    console.log(email, password, session)
+    let user = await User.findOne({where:{
+        email,
+        password
+    }})
+    if (user){
+        session.user = {username: user.username, userId: user.id};
+    }
+
+    else
+        delete session.user
+    return user;
+}
+
+async function isSignedIn(pofig, {session}){
+    console.log(session.user)
+    if (session.user){
+        return await User.findByPk(session.user.userId)
+    }
+    return null;
+}
+
 // Root resolver
 var TransactionResolver = {
     transactionsByDate,
     createTransaction,
     editTransaction,
     deleteTransaction,
-    createUser
+    createUser,
+    signIn,
+    isSignedIn
 };
 
 // respond with "hello world" when a GET request is made to the homepage
@@ -162,10 +198,11 @@ app.get('/', function(req, res) {
 
 // Create an express server and a GraphQL endpoint
 app.use(cors());
-app.use('/graphql', express_graphql({
+app.use('/graphql', express_graphql(req => ({
     schema: TransactionSchema,
     rootValue: TransactionResolver,
-    graphiql: true
-}));
+    graphiql: true,
+    context: {session: req.session}
+})));
 
 app.listen(8000);
