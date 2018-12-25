@@ -35,7 +35,7 @@ class SignInForm extends Component {
             email: '',
             password: ''
         });
-        this.props.signIn(user);
+        this.props.signIn(user.email, user.password);
     }
     
     render() {
@@ -79,12 +79,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        signIn: (email, password) => dispatch(actionSignIn(email, password))
-    };
-};
-
-SignInForm = connect(s => s)(SignInForm);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SignInForm);
+export default connect(mapStateToProps, {signIn: actionSignIn})(SignInForm);

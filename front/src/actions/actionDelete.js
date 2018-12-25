@@ -1,8 +1,6 @@
 import * as actionTypes from './actionTypes';
 import actionFetch from './actionFetch';
-import { GraphQLClient } from 'graphql-request';
-
-const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
+import gql from '../store/gql';
 
 const deleteTransaction = (`mutation deleteTransaction($id: Int!){
     deleteTransaction(id: $id){id}

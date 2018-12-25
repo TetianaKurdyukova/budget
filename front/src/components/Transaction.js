@@ -17,7 +17,6 @@ class Transaction extends Component {
         this.state = {
             title: this.props.title,
             summ: this.props.summ,
-            user: this.props.user,
             comment: this.props.comment,
             date: new Date(),
             create: true
@@ -49,13 +48,11 @@ class Transaction extends Component {
         let transaction = {
             title: this.state.title,
             summ: +this.state.summ,
-            user: this.state.user,
             comment: this.state.comment
         };
         this.setState({
             title: '',
             summ: 0,
-            user: '',
             comment: ''
         });
         this.props.createTransaction(transaction, this.state.date);
@@ -72,7 +69,6 @@ class Transaction extends Component {
             id: editInfo.id,
             title: editInfo.title,
             summ: editInfo.summ,
-            user: editInfo.user,
             comment: editInfo.comment,
             create: false
         });
@@ -83,14 +79,12 @@ class Transaction extends Component {
             id: this.state.id,
             title: this.state.title,
             summ: +this.state.summ,
-            user: this.state.user,
             comment: this.state.comment
         };
 
         this.setState({
             title: '',
             summ: 0,
-            user: '',
             comment: '',
             create: true
         });
@@ -103,7 +97,6 @@ class Transaction extends Component {
         this.setState({
             title: this.state.title,
             summ: this.state.summ,
-            user: this.state.user,
             comment: this.state.comment,
             create: false
         });
@@ -113,7 +106,7 @@ class Transaction extends Component {
         const { error, payload } = this.props.root;
         const create = this.state.create ? 'Save' : 'Update';
         const inputIsEmpty = 
-            this.state.title === '' || this.state.summ === '' || this.state.user === '' || this.state.comment === '' ? true : false;
+            this.state.title === '' || this.state.summ === '' || this.state.comment === '' ? true : false;
         
         return(
             <div className="container">
@@ -147,14 +140,6 @@ class Transaction extends Component {
                                 </td>
                                 <td>
                                     <input
-                                        name='user'
-                                        type='text'
-                                        placeholder='Enter User'
-                                        onChange={this.handleChange}
-                                        value={this.state.user} />
-                                </td>
-                                <td>
-                                    <input
                                         name='comment'
                                         type='text'
                                         placeholder="Enter Comment"
@@ -183,7 +168,6 @@ class Transaction extends Component {
                         <tr>
                             <th>Name Of Product</th>
                             <th>Summ</th>
-                            <th>User</th>
                             <th>Comment</th>
                             <th>Edit</th>
                             <th>Delete</th>
@@ -192,7 +176,6 @@ class Transaction extends Component {
                             <tr key={t.id}>
                                 <td>{t.title}</td>
                                 <td>{t.summ}</td>
-                                <td>{t.user}</td>
                                 <td>{t.comment}</td>
                                 <td><button onClick={(e) => this.handleEdit(e, t.id)}>Edit</button></td>
                                 <td><button onClick={(e) => this.handleDelete(e, t.id)}>Delete</button></td>

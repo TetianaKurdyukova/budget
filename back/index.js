@@ -15,15 +15,8 @@ const sequelize = new Sequelize('budget', 'root', 'root',
 
 const Op = Sequelize.Op;
 
-const Balance = sequelize.define('balanceLog', {
-    balanceName: Sequelize.STRING,
-    summ: Sequelize.INTEGER,
-    date: Sequelize.DATEONLY
-});
-
 const TransactionLog = sequelize.define('transactionLog', {
     date: Sequelize.DATEONLY,
-    user: Sequelize.STRING,
     title: Sequelize.STRING,
     summ: Sequelize.INTEGER,
     source: Sequelize.STRING,
@@ -39,6 +32,9 @@ const User = sequelize.define('user', {
     password: Sequelize.STRING,
     phone: Sequelize.STRING
 });
+
+User.hasMany(TransactionLog);
+TransactionLog.belongsTo(User);
 
 async function run(){
     await sequelize.sync({alter: true});
@@ -56,7 +52,7 @@ app.set('trust proxy', 1);
 app.use(cookieSession({
   name: "session",
   keys: ['key1', 'key2']
-}))
+}));
 
 const express_graphql = require('express-graphql');
 const { buildSchema } = require('graphql');
@@ -69,7 +65,6 @@ var TransactionSchema = buildSchema(`
         id: Int
         date: String
         summ: Int
-        user: String
         title: String
         assignment: String
         comment: String
@@ -77,7 +72,6 @@ var TransactionSchema = buildSchema(`
     type User {
         firstName: String
         lastName: String
-        password: String
         email: String
         phone: String
         id: Int
@@ -93,7 +87,6 @@ var TransactionSchema = buildSchema(`
         createTransaction(
             date: String,
             summ: Int!,
-            user: String!,
             title: String!,
             assignment: String,
             comment: String): TransactionLog
@@ -102,7 +95,6 @@ var TransactionSchema = buildSchema(`
             id: Int!,
             date: String,
             summ: Int!,
-            user: String!,
             title: String!,
             assignment: String,
             comment: String): TransactionLog
@@ -133,8 +125,16 @@ async function transactionsByDate(params){
     })
 }
 
-async function createTransaction(newTransaction){
-   return await TransactionLog.create(newTransaction)
+async function createTransaction(newTransaction, {session}){
+     console.log(session.user);
+    if (session.user){
+        let user = await User.findByPk(session.user.userId)
+        let transactionLog = await TransactionLog.create(newTransaction)
+        console.log('new transactionLog from user' + session.user.userId)
+        await transactionLog.setUser(user);
+        return transactionLog;
+    }
+   return null;
 }
 
 async function editTransaction(updatedTransaction){
@@ -162,17 +162,17 @@ async function signIn({email, password},{session}){
     let user = await User.findOne({where:{
         email,
         password
-    }})
+    }});
     if (user){
         session.user = {username: user.username, userId: user.id};
     }
 
     else
-        delete session.user
+        delete session.user;
     return user;
 }
 
-async function isSignedIn(pofig, {session}){
+async function isSignedIn(sth, {session}){
     console.log(session.user)
     if (session.user){
         return await User.findByPk(session.user.userId)
@@ -197,7 +197,7 @@ app.get('/', function(req, res) {
 });
 
 // Create an express server and a GraphQL endpoint
-app.use(cors());
+app.use(cors({origin: "http://localhost:3000", credentials: true}));
 app.use('/graphql', express_graphql(req => ({
     schema: TransactionSchema,
     rootValue: TransactionResolver,

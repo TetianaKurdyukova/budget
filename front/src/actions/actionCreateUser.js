@@ -1,7 +1,5 @@
 import * as actionTypes from './actionTypes'
-import { GraphQLClient } from 'graphql-request';
-
-const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
+import gql from '../store/gql'
 
 const createUser = (`mutation createUser($firstName: String!, $lastName: String!, $phone: String!, $email: String!, $password: String!){
     createUser(firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, password: $password) {id}

@@ -46,7 +46,6 @@ class SignUpForm extends Component {
             password: ''
         });
         this.props.createUser(user);
-        
     }
     
     render(){
@@ -126,6 +125,6 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-SignUpForm = connect(s => s)(SignUpForm);
+//SignUpForm = connect(s => s)(SignUpForm);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUpForm);

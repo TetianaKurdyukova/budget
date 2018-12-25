@@ -1,11 +1,9 @@
 import * as actionTypes from './actionTypes'
 import actionFetch from './actionFetch'
-import { GraphQLClient } from 'graphql-request';
+import gql from '../store/gql'
 
-const gql = new GraphQLClient("http://localhost:8000/graphql", { headers: {} });
-
-const createTransaction = (`mutation createTransaction($title: String!, $summ: Int!, $user: String!, $comment: String){
-    createTransaction(title: $title, summ: $summ, user: $user, comment: $comment) {id}
+const createTransaction = (`mutation createTransaction($title: String!, $summ: Int!, $comment: String){
+    createTransaction(title: $title, summ: $summ, comment: $comment) {id}
   }`);
 
 const actionCreate = function(transaction, date) {
