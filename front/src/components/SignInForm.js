@@ -30,8 +30,7 @@ class SignInForm extends Component {
             email: this.state.email,
             password: this.state.password
         };
-        console.log(this.state.email + ' you are signed in');
-        this.setState({
+            this.setState({
             email: '',
             password: ''
         });
@@ -40,12 +39,14 @@ class SignInForm extends Component {
     
     render() {
         return (
-            <div class='container'>
+            <div className='container'>
                 <form onSubmit={this.handleSubmit}>
                     <h2>Sign In Form</h2>
-                    <div>
-                        <label>Email: </label>
+                    <div className='form-group'>
+                        <label htmlFor='email'>Email: </label>
                         <input
+                            className='form-control'
+                            id='email'
                             name='email'
                             type='email'
                             placeholder="Enter Email"
@@ -53,9 +54,11 @@ class SignInForm extends Component {
                             onChange={this.handleChange}
                             value={this.state.email} />
                     </div>
-                    <div>
-                        <label>Password: </label>
+                    <div className='form-group'>
+                        <label htmlFor='password'>Password: </label>
                         <input
+                            className='form-control'
+                            id='password'
                             name='password'
                             type='password'
                             placeholder="Enter Password"
@@ -65,7 +68,7 @@ class SignInForm extends Component {
                             value={this.state.password} />
                     </div>
                     <div>
-                        <button onSubmit={this.handleSubmit}>Sign In</button>
+                        <button className='btn btn-primary' onSubmit={this.handleSubmit}>Sign In</button>
                     </div>
                 </form>
             </div>

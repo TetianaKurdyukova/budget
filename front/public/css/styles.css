@@ -1,0 +1,38 @@
+html, body {
+  height: 100%;
+}
+body {
+    background: lightcyan;
+}
+.login-list {
+    
+}
+.login-list li {
+    padding: 0 5px;
+}
+.container {
+    padding: 40px 20px;
+}
+.container h2 {
+    text-align: center;
+    margin: 0 0 20px;
+}
+
+.react-calendar {
+    margin: 0 auto;
+}
+
+/* Form */ 
+.main-form {
+    
+}
+.main-form > div {
+    margin: 0 0 10px;
+}
+.main-form label {
+    width: 150px;
+    margin: 0 5px 0 0;
+}
+.main-form input {
+    padding: 4px;
+}

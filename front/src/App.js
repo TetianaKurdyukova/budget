@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import createHistory from "history/createBrowserHistory";
 import Routing from './router/router';
 
 class App extends Component {
@@ -8,6 +7,6 @@ class App extends Component {
         <Routing />
     );
   }
-}
+};
 
 export default App;

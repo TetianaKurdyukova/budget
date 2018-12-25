@@ -104,9 +104,14 @@ class Transaction extends Component {
     
     render() {
         const { error, payload } = this.props.root;
-        const create = this.state.create ? 'Save' : 'Update';
+        const create = this.state.create ? 'Сохранить' : 'Обновить';
         const inputIsEmpty = 
             this.state.title === '' || this.state.summ === '' || this.state.comment === '' ? true : false;
+    
+        var total = 0;
+        payload.forEach(function(t) {
+            total+=t.summ;
+        });
         
         return(
             <div className="container">
@@ -116,16 +121,16 @@ class Transaction extends Component {
                     value={this.state.date}
                 />
     
-                <h3>Add Transaction Form</h3>
+                <h3>Добавить транзакции</h3>
                 <form onSubmit={this.handleSubmit}>
-                    <table>
+                    <table className='table'>
                         <tbody>
                             <tr>
                                 <td>
                                     <input
                                         name='title'
                                         type='text'
-                                        placeholder="Enter Title"
+                                        placeholder="Наименование"
                                         onChange={this.handleChange}
                                         value={this.state.title} />
                                 </td>
@@ -134,7 +139,7 @@ class Transaction extends Component {
                                         name='summ'
                                         type='number'
                                         step="0.01"
-                                        placeholder="Enter Summ"
+                                        placeholder="Сумма"
                                         onChange={this.handleChange}
                                         value={this.state.summ} />
                                 </td>
@@ -142,20 +147,21 @@ class Transaction extends Component {
                                     <input
                                         name='comment'
                                         type='text'
-                                        placeholder="Enter Comment"
+                                        placeholder="Комментарий"
                                         onChange={this.handleChange}
                                         value={this.state.comment} />
                                 </td>
                                 <td>
                                     <button
-                                    disabled={inputIsEmpty}
-                                    onClick={
-                                      this.state.create
-                                        ? this.handleSubmit
-                                        : this.handleUpdate
-                                    }
-                                    >
-                                    { create }
+                                        className='btn btn-primary'
+                                        disabled={inputIsEmpty}
+                                        onClick={
+                                          this.state.create
+                                            ? this.handleSubmit
+                                            : this.handleUpdate
+                                        }
+                                        >
+                                        { create }
                                     </button>
                                 </td>
                             </tr>
@@ -163,24 +169,32 @@ class Transaction extends Component {
                     </table>
                 </form>
                 <hr />
-                <table>
-                    <tbody>
+                <table className='table'>
+                    <thead className='thead-dark'>
                         <tr>
-                            <th>Name Of Product</th>
-                            <th>Summ</th>
-                            <th>Comment</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Сумма</th>
+                            <th scope="col">Комментарий</th>
+                            <th scope="col">Редактировать</th>
+                            <th scope="col">Удалить</th>
                         </tr>
+                    </thead>
+                        
+                    <tbody>  
                         {payload && payload.map(t =>
                             <tr key={t.id}>
                                 <td>{t.title}</td>
                                 <td>{t.summ}</td>
                                 <td>{t.comment}</td>
-                                <td><button onClick={(e) => this.handleEdit(e, t.id)}>Edit</button></td>
-                                <td><button onClick={(e) => this.handleDelete(e, t.id)}>Delete</button></td>
+                                <td><button className='btn btn-primary' onClick={(e) => this.handleEdit(e, t.id)}>Редактировать</button></td>
+                                <td><button className='btn btn-primary' onClick={(e) => this.handleDelete(e, t.id)}>Удалить</button></td>
                             </tr>
                         )}
+                        <tr>
+                            <td><strong>Итого:</strong></td>
+                            <td><strong>{total}</strong></td>
+                            <td colSpan='3'></td>
+                        </tr>
                     </tbody>
               </table>
             </div>

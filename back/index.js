@@ -76,7 +76,6 @@ var TransactionSchema = buildSchema(`
         phone: String
         id: Int
     }
-    
     type Query {
         transactionsByDate(date: String!): [TransactionLog],
         transactionById(id: Int!): TransactionLog,

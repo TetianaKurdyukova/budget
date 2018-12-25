@@ -30,7 +30,6 @@ class SignUpForm extends Component {
     
     handleSubmit(e){
         e.preventDefault();
-        console.log('congrats!');
         let user = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -50,12 +49,13 @@ class SignUpForm extends Component {
     
     render(){
         return (
-            <div>
+            <div className='container'>
                 <h2>Sign Up Form</h2>
-                <form onSubmit={this.handleSubmit}>
-                    <div>
+                <form className='main-form' onSubmit={this.handleSubmit}>
+                    <div className='form-group'>
                         <label>First Name: </label>
                         <input
+                            className='form-control'
                             name='firstName'
                             type='text'
                             placeholder="Enter FirstName"
@@ -63,9 +63,10 @@ class SignUpForm extends Component {
                             onChange={this.handleChange}
                             value={this.state.firstName} />
                     </div>
-                    <div>
+                    <div className='form-group'>
                         <label>Last Name: </label>
                         <input
+                            className='form-control'
                             name='lastName'
                             type='text'
                             placeholder="Enter LastName"
@@ -73,9 +74,10 @@ class SignUpForm extends Component {
                             onChange={this.handleChange}
                             value={this.state.lastName} />
                     </div>
-                    <div>
+                    <div className='form-group'>
                         <label>Phone Number: </label>
                         <input
+                            className='form-control'
                             name='phone'
                             type='tel'
                             placeholder="Enter Phone Number"
@@ -83,9 +85,10 @@ class SignUpForm extends Component {
                             onChange={this.handleChange}
                             value={this.state.phone} />
                     </div>
-                    <div>
+                    <div className='form-group'>
                         <label>Email: </label>
                         <input
+                            className='form-control'
                             name='email'
                             type='email'
                             placeholder="Enter Email"
@@ -93,19 +96,20 @@ class SignUpForm extends Component {
                             onChange={this.handleChange}
                             value={this.state.email} />
                     </div>
-                    <div>
+                    <div className='form-group'>
                         <label>Password: </label>
                         <input
+                            className='form-control'
                             name='password'
                             type='password'
-                            autocomplete='password'
+                            autoComplete='password'
                             placeholder="Enter Password"
                             ref={(input)=>this.password = input}
                             onChange={this.handleChange}
                             value={this.state.password} />
                     </div>
-                    <div>
-                        <button onSubmit={this.handleSubmit}>Sign Up</button>
+                    <div className='form-group'>
+                        <button className='btn btn-primary' onSubmit={this.handleSubmit}>Sign Up</button>
                     </div>
                 </form>
             </div>
@@ -124,7 +128,5 @@ const mapDispatchToProps = (dispatch) => {
         createUser: user => dispatch(actionCreateUser(user))
     };
 };
-
-//SignUpForm = connect(s => s)(SignUpForm);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUpForm);

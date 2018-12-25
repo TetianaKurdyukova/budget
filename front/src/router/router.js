@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {Router, Route, Link, Switch} from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
+import Main from '../components/Main';
 import Transaction from '../components/Transaction';
 import SignInForm from '../components/SignInForm';
 import SignUpForm from '../components/SignUpForm';
@@ -11,26 +12,11 @@ class Routing extends Component{
     return(
         <Router history = {createHistory()}>
             <div>
-                <ul>
-                    <li>
-                      <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                      <Link to="/not-found">Not Found</Link>
-                    </li>
-                    <li>
-                      <Link to="/sign-in-form">Sign In</Link>
-                    </li>
-                    <li>
-                      <Link to="/sign-up-form">Sign Up</Link>
-                    </li>
-                </ul>
-                <Switch>
-                  <Route path="/" component={ Transaction } exact />             
-                  <Route path="/sign-in-form" component={ SignInForm } />
-                  <Route path="/sign-up-form" component={ SignUpForm } />
-                  <Route path="/not-found" component = { NotFound } />
-                </Switch>
+                <Route path="/" component={ Main } exact />             
+                <Route path="/transaction" component={ Transaction } />
+                <Route path="/sign-in-form" component={ SignInForm } />
+                <Route path="/sign-up-form" component={ SignUpForm } />
+                <Route path="/not-found" component = { NotFound } />
             </div>
         </Router>
     );

@@ -8,9 +8,9 @@ const signIn = (`query signIn($email: String!, $password: String!){
 const actionSignIn = function(email, password) {
     return async dispatch => {
         dispatch(actionTypes.signInPending());
-        let user = await gql.request(signIn, {email, password})
+        await gql.request(signIn, {email, password})
+            .then(resp => dispatch(actionTypes.signInResolved(resp.signIn)))
             .catch(error => dispatch(actionTypes.signInRejected(error)));
-        dispatch(actionTypes.signInResolved(user.signIn))
     };
 };
 
